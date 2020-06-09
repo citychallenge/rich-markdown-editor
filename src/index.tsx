@@ -576,10 +576,13 @@ const StyledEditor = styled("div")<{ readOnly?: boolean }>`
   }
 
   .image {
+    margin: 10px auto;
     text-align: center;
+    max-width: 400px;
 
     img {
       pointer-events: ${props => (props.readOnly ? "initial" : "none")};
+      border-radius: 5px;
     }
   }
 
@@ -618,14 +621,18 @@ const StyledEditor = styled("div")<{ readOnly?: boolean }>`
     pointer-events: none;
   }
 
+  h1 {
+    font-size: 1.2em;
+  }
+
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    margin: 1em 0 0.5em;
-    font-weight: 500;
+    margin: 1.2em 0 0.5em;
+    font-weight: 600;
     cursor: default;
 
     &:not(.placeholder):before {
@@ -633,8 +640,9 @@ const StyledEditor = styled("div")<{ readOnly?: boolean }>`
       position: absolute;
       font-family: ${props => props.theme.fontFamilyMono};
       color: ${props => props.theme.textSecondary};
-      font-size: 13px;
+      font-size: 12px;
       left: -24px;
+      font-weight: 500;
     }
   }
 
@@ -655,15 +663,13 @@ const StyledEditor = styled("div")<{ readOnly?: boolean }>`
   }
   h2:not(.placeholder):before {
     content: "H2";
-    line-height: 2.8em;
+    line-height: 2.6em;
   }
   h3:not(.placeholder):before {
     content: "H3";
-    line-height: 2.3em;
   }
   h4:not(.placeholder):before {
     content: "H4";
-    line-height: 2.2em;
   }
   h5:not(.placeholder):before {
     content: "H5";
@@ -735,6 +741,7 @@ const StyledEditor = styled("div")<{ readOnly?: boolean }>`
   p {
     position: relative;
     margin: 0;
+    margin-bottom: 10px;
   }
 
   a {
@@ -749,6 +756,7 @@ const StyledEditor = styled("div")<{ readOnly?: boolean }>`
   ol {
     margin: 0 0.1em;
     padding: 0 0 0 1em;
+    margin-bottom: 10px;
 
     ul,
     ol {
