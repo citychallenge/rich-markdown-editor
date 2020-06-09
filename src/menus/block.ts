@@ -1,14 +1,8 @@
 import {
-  BlockQuoteIcon,
   BulletedListIcon,
-  CodeIcon,
   Heading1Icon,
-  Heading2Icon,
-  Heading3Icon,
   HorizontalRuleIcon,
   OrderedListIcon,
-  TableIcon,
-  TodoListIcon,
   ImageIcon,
 } from "outline-icons";
 import { MenuItem } from "../types";
@@ -17,37 +11,14 @@ export default function blockMenuItems(): MenuItem[] {
   return [
     {
       name: "heading",
-      title: "Big heading",
+      title: "Heading",
       keywords: "h1 heading1 title",
       icon: Heading1Icon,
       shortcut: "^ ⇧ 1",
       attrs: { level: 1 },
     },
     {
-      name: "heading",
-      title: "Medium heading",
-      keywords: "h2 heading2",
-      icon: Heading2Icon,
-      shortcut: "^ ⇧ 2",
-      attrs: { level: 2 },
-    },
-    {
-      name: "heading",
-      title: "Small heading",
-      keywords: "h3 heading3",
-      icon: Heading3Icon,
-      shortcut: "^ ⇧ 3",
-      attrs: { level: 3 },
-    },
-    {
       name: "separator",
-    },
-    {
-      name: "checkbox_list",
-      title: "Todo list",
-      icon: TodoListIcon,
-      keywords: "checklist checkbox task",
-      shortcut: "^ ⇧ 7",
     },
     {
       name: "bullet_list",
@@ -63,26 +34,6 @@ export default function blockMenuItems(): MenuItem[] {
     },
     {
       name: "separator",
-    },
-    {
-      name: "table",
-      title: "Table",
-      icon: TableIcon,
-      attrs: { rowsCount: 3, colsCount: 3 },
-    },
-    {
-      name: "blockquote",
-      title: "Quote",
-      icon: BlockQuoteIcon,
-      shortcut: "⌘ ]",
-      attrs: { level: 2 },
-    },
-    {
-      name: "code_block",
-      title: "Code block",
-      icon: CodeIcon,
-      shortcut: "^ ⇧ \\",
-      keywords: "script",
     },
     {
       name: "hr",

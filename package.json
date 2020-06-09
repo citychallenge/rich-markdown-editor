@@ -1,5 +1,5 @@
 {
-  "name": "rich-markdown-editor",
+  "name": "@citychallenge/rich-markdown-editor",
   "description": "A rich text editor with Markdown shortcuts",
   "version": "10.0.3",
   "main": "dist/lib/index.js",

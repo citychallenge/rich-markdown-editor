@@ -1,13 +1,9 @@
 import {
   BoldIcon,
-  CodeIcon,
   Heading1Icon,
-  Heading2Icon,
   ItalicIcon,
-  BlockQuoteIcon,
   LinkIcon,
   StrikethroughIcon,
-  HighlightIcon,
 } from "outline-icons";
 import { isInTable } from "prosemirror-tables";
 import { EditorState } from "prosemirror-state";
@@ -42,18 +38,6 @@ export default function formattingMenuItems(state: EditorState): MenuItem[] {
       active: isMarkActive(schema.marks.strikethrough),
     },
     {
-      name: "mark",
-      tooltip: "Highlight",
-      icon: HighlightIcon,
-      active: isMarkActive(schema.marks.mark),
-    },
-    {
-      name: "code_inline",
-      tooltip: "Code",
-      icon: CodeIcon,
-      active: isMarkActive(schema.marks.code_inline),
-    },
-    {
       name: "separator",
       visible: allowBlocks,
     },
@@ -63,22 +47,6 @@ export default function formattingMenuItems(state: EditorState): MenuItem[] {
       icon: Heading1Icon,
       active: isNodeActive(schema.nodes.heading, { level: 1 }),
       attrs: { level: 1 },
-      visible: allowBlocks,
-    },
-    {
-      name: "heading",
-      tooltip: "Subheading",
-      icon: Heading2Icon,
-      active: isNodeActive(schema.nodes.heading, { level: 2 }),
-      attrs: { level: 2 },
-      visible: allowBlocks,
-    },
-    {
-      name: "blockquote",
-      tooltip: "Quote",
-      icon: BlockQuoteIcon,
-      active: isNodeActive(schema.nodes.blockquote),
-      attrs: { level: 2 },
       visible: allowBlocks,
     },
     {
