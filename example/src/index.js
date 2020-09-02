@@ -67,7 +67,8 @@ class Example extends React.Component {
 
   handleUpdateValue = () => {
     const existing = localStorage.getItem("saved") || "";
-    const value = `${existing}\n\nedit!`;
+    console.log(existing);
+    const value = `${existing}`;
     localStorage.setItem("saved", value);
 
     this.setState({ value });

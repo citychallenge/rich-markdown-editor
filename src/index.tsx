@@ -602,11 +602,45 @@ const StyledEditor = styled("div")<{ readOnly?: boolean }>`
   .image {
     margin: 10px auto;
     text-align: center;
-    max-width: 400px;
 
     img {
       pointer-events: ${props => (props.readOnly ? "initial" : "none")};
       border-radius: 5px;
+    }
+    &:focus {
+      outline: none;
+      .image-inner {
+        outline: -webkit-focus-ring-color auto 1px;
+      }
+    }
+  }
+
+  .image-inner {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .embed {
+    .embed-inner,
+    iframe {
+      display: block;
+      border: none;
+      width: 400px;
+      height: 250px;
+    }
+    .embed-inner {
+      margin: 0 auto;
+    }
+    iframe {
+      pointer-events: none;
+      border-radius: 5px;
+    }
+
+    &:focus {
+      outline: none;
+      .embed-inner {
+        outline: -webkit-focus-ring-color auto 1px;
+      }
     }
   }
 
@@ -766,6 +800,10 @@ const StyledEditor = styled("div")<{ readOnly?: boolean }>`
     position: relative;
     margin: 0;
     margin-bottom: 10px;
+  }
+
+  p span + br {
+    display: none;
   }
 
   a {

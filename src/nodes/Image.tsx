@@ -1,5 +1,11 @@
 import * as React from "react";
-import { Plugin } from "prosemirror-state";
+import { Plugin, NodeSelection, TextSelection } from "prosemirror-state";
+import {
+  safeInsert,
+  findParentNodeOfType,
+  removeParentNodeOfType,
+} from "prosemirror-utils";
+
 import { InputRule } from "prosemirror-inputrules";
 import styled from "styled-components";
 import ImageZoom from "react-medium-image-zoom";
@@ -86,10 +92,10 @@ export default class Image extends Node {
           default: null,
         },
       },
-      content: "text*",
-      marks: "",
       group: "inline",
+      editable: false,
       draggable: true,
+      selectable: true,
       parseDOM: [
         {
           tag: "div[class=image]",
@@ -141,44 +147,96 @@ export default class Image extends Node {
     view.dispatch(transaction);
   };
 
+  removeImage(element: HTMLDivElement) {
+    const { view, schema } = this.editor;
+    const { doc, tr } = view.state;
+
+    // Find the position
+    const pos = doc.resolve(view.posAtDOM(element, 0));
+
+    const txn = tr.setSelection(new NodeSelection(pos));
+    view.dispatch(removeParentNodeOfType(schema.node("paragraph").type)(txn));
+  }
+
+  insertParagraphAfter(element: HTMLDivElement) {
+    const { view, schema } = this.editor;
+    const { doc, tr } = view.state;
+
+    // Find the position
+    const pos = doc.resolve(view.posAtDOM(element, 0));
+    const selection = new NodeSelection(pos);
+
+    const parent = findParentNodeOfType(schema.node("paragraph").type)(
+      selection
+    );
+    if (!parent) return;
+
+    const parentPos = doc.resolve(parent.pos);
+    let txn = tr.setSelection(new NodeSelection(parentPos));
+
+    txn = safeInsert(schema.node("paragraph").type.create())(txn);
+    const resolvedPos = tr.doc.resolve(parent.pos + parent.node.nodeSize);
+    console.log(resolvedPos);
+    txn.setSelection(new TextSelection(resolvedPos));
+
+    view.dispatch(txn);
+    view.focus();
+  }
+
   component = options => {
     const { theme } = options;
     const { alt, src } = options.node.attrs;
 
     return (
-      <div className="image" contentEditable={false}>
-        <ImageZoom
-          image={{
-            src,
-            alt,
-            style: {
-              maxWidth: "100%",
-              maxHeight: "75vh",
-            },
-          }}
-          defaultStyles={{
-            overlay: {
-              backgroundColor: theme.background,
-            },
-          }}
-          shouldRespectMaxDimension
-        />
-        {(options.isEditable || alt) && (
-          <Caption
-            onKeyDown={this.handleKeyDown}
-            onBlur={this.handleBlur(options)}
-            tabIndex={-1}
-            contentEditable={options.isEditable}
-            suppressContentEditableWarning
-          >
-            {alt}
-          </Caption>
-        )}
+      <div
+        className="image"
+        tabIndex={0}
+        contentEditable={false}
+        onKeyUp={({ currentTarget, key }) => {
+          if (key === "Delete" || key === "Backspace") {
+            this.removeImage(currentTarget);
+          }
+          if (key === "Enter") {
+            this.insertParagraphAfter(currentTarget);
+          }
+        }}
+      >
+        <div className="image-inner">
+          <ImageZoom
+            image={{
+              src,
+              alt,
+              style: {
+                maxWidth: "100%",
+                maxHeight: "75vh",
+              },
+            }}
+            defaultStyles={{
+              overlay: {
+                backgroundColor: theme.background,
+              },
+            }}
+            shouldRespectMaxDimension
+          />
+          {(options.isEditable || alt) && (
+            <Caption
+              onKeyDown={this.handleKeyDown}
+              onBlur={this.handleBlur(options)}
+              tabIndex={-1}
+              contentEditable={options.isEditable}
+              suppressContentEditableWarning
+            >
+              {alt}
+            </Caption>
+          )}
+        </div>
       </div>
     );
   };
 
   toMarkdown(state, node) {
+    // Ensure newline etc
+    state.ensureNewLine();
     state.write(
       "![" +
         state.esc((node.attrs.alt || "").replace("\n", "") || "") +
