@@ -486,6 +486,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const selection = TextSelection.create(this.view.state.doc, 0);
     const transaction = this.view.state.tr.setSelection(selection);
     this.view.dispatch(transaction);
+
+    this.setState({
+      blockMenuOpen: false,
+    });
   };
 
   getHeadings = () => {
