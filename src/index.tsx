@@ -1,6 +1,11 @@
 /* global window File Promise */
 import * as React from "react";
-import { EditorState, Selection, Plugin } from "prosemirror-state";
+import {
+  EditorState,
+  Selection,
+  Plugin,
+  TextSelection,
+} from "prosemirror-state";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
 import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
@@ -23,6 +28,7 @@ import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
 import headingToSlug from "./lib/headingToSlug";
+import ClickOutside from "./lib/ClickOutside";
 
 // nodes
 import ReactNode from "./nodes/ReactNode";
@@ -476,6 +482,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.view.focus();
   };
 
+  onClickOutside = () => {
+    const selection = TextSelection.create(this.view.state.doc, 0);
+    const transaction = this.view.state.tr.setSelection(selection);
+    this.view.dispatch(transaction);
+  };
+
   getHeadings = () => {
     const headings: { title: string; level: number; id: string }[] = [];
     const previouslySeen = {};
@@ -512,57 +524,59 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
 
     return (
-      <Flex
-        onKeyDown={onKeyDown}
-        style={style}
-        className={className}
-        align="flex-start"
-        justify="center"
-        column
-      >
-        <ThemeProvider theme={theme}>
-          <React.Fragment>
-            <StyledEditor
-              readOnly={readOnly}
-              ref={ref => (this.element = ref)}
-            />
-            {!readOnly && this.view && (
-              <React.Fragment>
-                <SelectionToolbar
-                  view={this.view}
-                  commands={this.commands}
-                  onSearchLink={this.props.onSearchLink}
-                  onClickLink={this.props.onClickLink}
-                  onCreateLink={this.props.onCreateLink}
-                  tooltip={tooltip}
-                />
-                <LinkToolbar
-                  view={this.view}
-                  isActive={this.state.linkMenuOpen}
-                  onCreateLink={this.props.onCreateLink}
-                  onSearchLink={this.props.onSearchLink}
-                  onClickLink={this.props.onClickLink}
-                  onShowToast={this.props.onShowToast}
-                  onClose={this.handleCloseLinkMenu}
-                  tooltip={tooltip}
-                />
-                <BlockMenu
-                  view={this.view}
-                  commands={this.commands}
-                  isActive={this.state.blockMenuOpen}
-                  search={this.state.blockMenuSearch}
-                  onClose={this.handleCloseBlockMenu}
-                  uploadImage={this.props.uploadImage}
-                  onImageUploadStart={this.props.onImageUploadStart}
-                  onImageUploadStop={this.props.onImageUploadStop}
-                  onShowToast={this.props.onShowToast}
-                  embeds={this.props.embeds}
-                />
-              </React.Fragment>
-            )}
-          </React.Fragment>
-        </ThemeProvider>
-      </Flex>
+      <ClickOutside onClickOutside={this.onClickOutside}>
+        <Flex
+          onKeyDown={onKeyDown}
+          style={style}
+          className={className}
+          align="flex-start"
+          justify="center"
+          column
+        >
+          <ThemeProvider theme={theme}>
+            <React.Fragment>
+              <StyledEditor
+                readOnly={readOnly}
+                ref={ref => (this.element = ref)}
+              />
+              {!readOnly && this.view && (
+                <React.Fragment>
+                  <SelectionToolbar
+                    view={this.view}
+                    commands={this.commands}
+                    onSearchLink={this.props.onSearchLink}
+                    onClickLink={this.props.onClickLink}
+                    onCreateLink={this.props.onCreateLink}
+                    tooltip={tooltip}
+                  />
+                  <LinkToolbar
+                    view={this.view}
+                    isActive={this.state.linkMenuOpen}
+                    onCreateLink={this.props.onCreateLink}
+                    onSearchLink={this.props.onSearchLink}
+                    onClickLink={this.props.onClickLink}
+                    onShowToast={this.props.onShowToast}
+                    onClose={this.handleCloseLinkMenu}
+                    tooltip={tooltip}
+                  />
+                  <BlockMenu
+                    view={this.view}
+                    commands={this.commands}
+                    isActive={this.state.blockMenuOpen}
+                    search={this.state.blockMenuSearch}
+                    onClose={this.handleCloseBlockMenu}
+                    uploadImage={this.props.uploadImage}
+                    onImageUploadStart={this.props.onImageUploadStart}
+                    onImageUploadStop={this.props.onImageUploadStop}
+                    onShowToast={this.props.onShowToast}
+                    embeds={this.props.embeds}
+                  />
+                </React.Fragment>
+              )}
+            </React.Fragment>
+          </ThemeProvider>
+        </Flex>
+      </ClickOutside>
     );
   };
 }
