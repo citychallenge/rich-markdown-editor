@@ -123,9 +123,14 @@ export default class Image extends Node {
     };
   }
 
-  handleKeyDown = event => {
+  preventCaptionKeys = event => {
     if (event.key === "Enter") {
       event.preventDefault();
+      return;
+    }
+
+    if (event.key === "Delete" || event.key === "Backspace") {
+      event.stopPropagation();
       return;
     }
   };
@@ -176,7 +181,7 @@ export default class Image extends Node {
 
     txn = safeInsert(schema.node("paragraph").type.create())(txn);
     const resolvedPos = tr.doc.resolve(parent.pos + parent.node.nodeSize);
-    console.log(resolvedPos);
+
     txn.setSelection(new TextSelection(resolvedPos));
 
     view.dispatch(txn);
@@ -220,7 +225,8 @@ export default class Image extends Node {
           />
           {(options.isEditable || alt) && (
             <Caption
-              onKeyDown={this.handleKeyDown}
+              onKeyDown={this.preventCaptionKeys}
+              onKeyUp={this.preventCaptionKeys}
               onBlur={this.handleBlur(options)}
               tabIndex={-1}
               contentEditable={options.isEditable}
