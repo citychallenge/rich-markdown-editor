@@ -606,11 +606,15 @@ const StyledEditor = styled("div")<{ readOnly?: boolean }>`
     img {
       pointer-events: ${props => (props.readOnly ? "initial" : "none")};
       border-radius: 5px;
+      border: 2px solid transparent;
     }
     &:focus {
       outline: none;
       .image-inner {
-        outline: -webkit-focus-ring-color auto 1px;
+        img {
+          border: 2px solid
+            ${props => (props.readOnly ? "transparent" : props.theme.selected)};
+        }
       }
     }
   }
@@ -1183,19 +1187,19 @@ const StyledEditor = styled("div")<{ readOnly?: boolean }>`
     border-radius: 100%;
     font-size: 30px;
     position: absolute;
-    transform: scale(0.9);
+    transform: scale(0.8);
     transition: color 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
       transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
     outline: none;
     border: 0;
     line-height: 1;
-    margin-top: -6px;
-    left: -34px;
+    margin-top: -2px;
+    left: -30px;
 
     &:hover,
     &:focus {
       cursor: pointer;
-      transform: scale(1);
+      transform: scale(0.9);
       color: ${props => props.theme.text};
     }
   }
