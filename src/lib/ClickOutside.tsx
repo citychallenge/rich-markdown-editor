@@ -12,9 +12,20 @@ const ClickOutside: FC<ClickOutsideProps> = ({
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
-  const handleClick = useCallback((e: MouseEvent) => {
-    if (ref.current?.contains(e.target as Node)) return;
-    onClickOutside();
+
+  const insideRef = useRef(false);
+
+  const handlePointerDown = useCallback((e: PointerEvent) => {
+    // Remember if initial press down is inside the element
+    insideRef.current = !!ref.current?.contains(e.target as Node);
+  }, []);
+
+  const handlePointerUp = useCallback((e: PointerEvent) => {
+    // If intial press down was outside the element, and the press up event
+    // was also outside the element, then this press was a 'click outside'
+    if (!insideRef.current && !ref.current?.contains(e.target as Node)) {
+      onClickOutside();
+    }
   }, []);
 
   useEffect(() => {
@@ -25,8 +36,13 @@ const ClickOutside: FC<ClickOutsideProps> = ({
 
   useEffect(() => {
     if (!ready) return;
-    document.addEventListener("click", handleClick, false);
-    return () => document.removeEventListener("click", handleClick, false);
+    document.addEventListener("pointerdown", handlePointerDown, false);
+    document.addEventListener("pointerup", handlePointerUp, false);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown, false);
+      document.removeEventListener("pointerup", handlePointerUp, false);
+    };
   }, [ready]);
   return (
     <div className={className} ref={ref}>
