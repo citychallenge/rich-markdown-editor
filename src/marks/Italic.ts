@@ -34,8 +34,8 @@ export default class Italic extends Mark {
 
   get toMarkdown() {
     return {
-      open: "*",
-      close: "*",
+      open: "_",
+      close: "_",
       mixable: true,
       expelEnclosingWhitespace: true,
     };
