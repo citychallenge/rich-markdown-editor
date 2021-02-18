@@ -28,7 +28,6 @@ import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
 import headingToSlug from "./lib/headingToSlug";
-import ClickOutside from "./lib/ClickOutside";
 
 // nodes
 import ReactNode from "./nodes/ReactNode";
@@ -528,59 +527,57 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
 
     return (
-      <ClickOutside onClickOutside={this.onClickOutside}>
-        <Flex
-          onKeyDown={onKeyDown}
-          style={style}
-          className={className}
-          align="flex-start"
-          justify="center"
-          column
-        >
-          <ThemeProvider theme={theme}>
-            <React.Fragment>
-              <StyledEditor
-                readOnly={readOnly}
-                ref={ref => (this.element = ref)}
-              />
-              {!readOnly && this.view && (
-                <React.Fragment>
-                  <SelectionToolbar
-                    view={this.view}
-                    commands={this.commands}
-                    onSearchLink={this.props.onSearchLink}
-                    onClickLink={this.props.onClickLink}
-                    onCreateLink={this.props.onCreateLink}
-                    tooltip={tooltip}
-                  />
-                  <LinkToolbar
-                    view={this.view}
-                    isActive={this.state.linkMenuOpen}
-                    onCreateLink={this.props.onCreateLink}
-                    onSearchLink={this.props.onSearchLink}
-                    onClickLink={this.props.onClickLink}
-                    onShowToast={this.props.onShowToast}
-                    onClose={this.handleCloseLinkMenu}
-                    tooltip={tooltip}
-                  />
-                  <BlockMenu
-                    view={this.view}
-                    commands={this.commands}
-                    isActive={this.state.blockMenuOpen}
-                    search={this.state.blockMenuSearch}
-                    onClose={this.handleCloseBlockMenu}
-                    uploadImage={this.props.uploadImage}
-                    onImageUploadStart={this.props.onImageUploadStart}
-                    onImageUploadStop={this.props.onImageUploadStop}
-                    onShowToast={this.props.onShowToast}
-                    embeds={this.props.embeds}
-                  />
-                </React.Fragment>
-              )}
-            </React.Fragment>
-          </ThemeProvider>
-        </Flex>
-      </ClickOutside>
+      <Flex
+        onKeyDown={onKeyDown}
+        style={style}
+        className={className}
+        align="flex-start"
+        justify="center"
+        column
+      >
+        <ThemeProvider theme={theme}>
+          <React.Fragment>
+            <StyledEditor
+              readOnly={readOnly}
+              ref={ref => (this.element = ref)}
+            />
+            {!readOnly && this.view && (
+              <React.Fragment>
+                <SelectionToolbar
+                  view={this.view}
+                  commands={this.commands}
+                  onSearchLink={this.props.onSearchLink}
+                  onClickLink={this.props.onClickLink}
+                  onCreateLink={this.props.onCreateLink}
+                  tooltip={tooltip}
+                />
+                <LinkToolbar
+                  view={this.view}
+                  isActive={this.state.linkMenuOpen}
+                  onCreateLink={this.props.onCreateLink}
+                  onSearchLink={this.props.onSearchLink}
+                  onClickLink={this.props.onClickLink}
+                  onShowToast={this.props.onShowToast}
+                  onClose={this.handleCloseLinkMenu}
+                  tooltip={tooltip}
+                />
+                <BlockMenu
+                  view={this.view}
+                  commands={this.commands}
+                  isActive={this.state.blockMenuOpen}
+                  search={this.state.blockMenuSearch}
+                  onClose={this.handleCloseBlockMenu}
+                  uploadImage={this.props.uploadImage}
+                  onImageUploadStart={this.props.onImageUploadStart}
+                  onImageUploadStop={this.props.onImageUploadStop}
+                  onShowToast={this.props.onShowToast}
+                  embeds={this.props.embeds}
+                />
+              </React.Fragment>
+            )}
+          </React.Fragment>
+        </ThemeProvider>
+      </Flex>
     );
   };
 }
